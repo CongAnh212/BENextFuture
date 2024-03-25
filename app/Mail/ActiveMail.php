@@ -19,7 +19,7 @@ class ActiveMail extends Mailable
     {
         $this->data     =   $data;
     }
-
+ 
     public function build()
     {
         return $this->subject('Kích hoạt tài khoản NextFuture')
