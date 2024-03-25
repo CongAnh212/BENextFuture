@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/update-profile', [ProfileController::class, "updateProfile"]);                    // trang cá nhân của người đang đăng nhập
         Route::post('/update-link-address', [ProfileController::class, "updateLink"]);                  // trang cá nhân của người đang đăng nhập
         Route::get('/data-address-link', [ProfileController::class, "dataLinkAddressProfile"]);         // tất cả thông tin profile
+        Route::post('/change-password', [ProfileController::class, "changePassword"]);                 // đổi mật khẩu
     });
 
     Route::get('/dataFull', [ClientController::class, "getAllData"]);                                   // những người bạn có thể biết

@@ -34,7 +34,7 @@ class Client extends Authenticatable
 
     const account = 1;
     const banned_account = 0;
-    
+
     public static function getFriend($id)
     {
         $result = Friend::select('id_friend as id_client')
@@ -46,5 +46,4 @@ class Client extends Authenticatable
             ->pluck('id_client')->toArray();
         return $result;
     }
-
 }
