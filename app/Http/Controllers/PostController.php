@@ -214,4 +214,27 @@ class PostController extends Controller
             ]);
         }
     }
+
+    public function updatePrivacy(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $post = Post::find($request->id);
+            $post->update([
+                'privacy' => $request->privacy
+            ]);
+            DB::commit();
+            return response()->json([
+                'status'    => 1,
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json([
+                'status'    => 0,
+                'message'   => '',
+            ]);
+        }
+    }
 }
