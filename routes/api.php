@@ -78,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/create', [PostController::class, "create"]);
         Route::post('/delete', [PostController::class, 'destroy']);
         Route::post('/update', [PostController::class, 'update']);
+        Route::post('/update-privacy', [PostController::class, 'updatePrivacy']);
         Route::get('/data', [PostController::class, "dataPost"]);
         Route::post('/data-profile', [PostController::class, "dataProfile"]);
 
@@ -171,10 +172,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::group(['prefix' => '/post'], function () {
             Route::get('/getAllPosts', [AdminController::class, "getAllPosts"]);            // tất cả bài đăng
             Route::post('/deletePost', [AdminController::class, "deletePost"]);             // xóa bài đăng
+
         });
         Route::group(['prefix' => '/account'], function () {
             Route::get('/getAllAccounts', [AdminController::class, "getAllAccounts"]);            // tất cả nhóm
             Route::post('/banAccount', [AdminController::class, "banAccount"]);             // xóa nhóm
+            Route::post('/unbanAccount', [AdminController::class, "unbanAccount"]);             // xóa nhóm
         });
     });
 

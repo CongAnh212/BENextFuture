@@ -14,7 +14,7 @@ class AdminController extends Controller
         $posts = Post::join('clients', 'clients.id', '=', 'posts.id_client')
             ->leftJoin('post_likes', 'post_likes.id_post', '=', 'posts.id')
             ->leftJoin('comments', 'comments.id_post', '=', 'posts.id')
-            ->select('posts.id', 'clients.fullname', 'clients.avatar', 'posts.images', 'posts.created_at', 'posts.caption', 
+            ->select('posts.id', 'clients.fullname', 'clients.avatar', 'posts.images', 'posts.created_at', 'posts.caption',
                 DB::raw('COUNT(DISTINCT post_likes.id) as react'),
                 DB::raw('COUNT(DISTINCT comments.id) as comment'),
                 'posts.privacy')
@@ -63,6 +63,21 @@ class AdminController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Ban error: Account not found!',
+            ]);
+        }
+    }
+    public function unbanAccount(Request $request){
+        $user = Client::find($request->id);
+        if ($user) {
+            $user->update(['status' => 1]);
+            return response()->json([
+                'status' => 1,
+                'message' => 'Account unbanned successfully!',
+            ]);
+        }else{
+            return response()->json([
+                'status' => 0,
+                'message' => 'Unban error: Account not found!',
             ]);
         }
     }
