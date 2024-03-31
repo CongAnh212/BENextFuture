@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SignUpRequest;
 use App\Mail\ActiveMail;
+use App\Models\Admin;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -180,11 +181,27 @@ class AccountController extends Controller
         if (!$token) {
             return response()->json(['message' => 'Token is missing'], 401);
         }
+
         if (Auth::guard('sanctum')->check()) {
+            $user = Auth::guard('sanctum')->user();
+            $currentToken = $user->currentAccessToken();
+
+            if ($user instanceof Client) {
+                // Người dùng là client
+                return response()->json([
+                    'message' => 'Client authenticated.',
+                    'user_type' => 'client',
+                ]);
+            } else if ($user instanceof Admin) {
+                // Người dùng là admin
+                return response()->json([
+                    'message' => 'Admin authenticated.',
+                    'user_type' => 'admin',
+                ]);
+            }
             return response()->json([
-                'message' => 'Token is valid',
-                'status' => true,
-            ], 200);
+                'status'    => $currentToken
+            ]);
         }
 
         return response()->json([

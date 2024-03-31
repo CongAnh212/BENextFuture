@@ -2,14 +2,10 @@
 
 return [
 
-
-
     'defaults' => [
         'guard' => 'web',
         'passwords' => 'users',
     ],
-
-
 
     'guards' => [
         'web' => [
@@ -20,9 +16,11 @@ return [
             'driver' => 'session',
             'provider' => 'client',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admin',
+        ],
     ],
-
-
 
     'providers' => [
         'users' => [
@@ -33,7 +31,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Client::class,
         ],
-
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
     ],
 
     'passwords' => [
@@ -44,7 +45,6 @@ return [
             'throttle' => 60,
         ],
     ],
-
 
     'password_timeout' => 10800,
 
