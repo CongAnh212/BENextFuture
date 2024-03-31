@@ -135,4 +135,19 @@ class AdminController extends Controller
             ]);
         }
     }
+    public function unbanAccount(Request $request){
+        $user = Client::find($request->id);
+        if ($user) {
+            $user->update(['status' => 1]);
+            return response()->json([
+                'status' => 1,
+                'message' => 'Account unbanned successfully!',
+            ]);
+        }else{
+            return response()->json([
+                'status' => 0,
+                'message' => 'Unban error: Account not found!',
+            ]);
+        }
+    }
 }
