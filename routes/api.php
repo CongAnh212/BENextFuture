@@ -20,6 +20,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StoriesController;
 use App\Http\Controllers\TestController;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/sign-up', [AccountController::class, 'register']);
@@ -28,12 +29,26 @@ Route::post('/active-mail', [AccountController::class, 'activeMail']);
 Route::post('/resent-mail', [AccountController::class, 'resentMail']);
 Route::post('/delete-active', [AccountController::class, 'deleteActive']);
 Route::get('/authorization', [AccountController::class, 'authorization']);
+Route::post('/admin/sign-in', [AdminController::class, 'signInAdmin']);                    //đăng nhập admin
 
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::group(['prefix' => '/admin'], function () {
+        Route::get('/info', [AdminController::class, "info"]);
+        Route::post('/logOut', [AdminController::class, "logOut"]);
+        Route::group(['prefix' => '/post'], function () {
+            Route::get('/getAllPosts', [AdminController::class, "getAllPosts"]);            // tất cả bài đăng
+            Route::post('/deletePost', [AdminController::class, "deletePost"]);             // xóa bài đăng
+        });
+        Route::group(['prefix' => '/account'], function () {
+            Route::get('/getAllAccounts', [AdminController::class, "getAllAccounts"]);      // tất cả tài khoản
+            Route::post('/banAccount', [AdminController::class, "banAccount"]);             // cấm tài khoản
+           Route::post('/unbanAccount', [AdminController::class, "unbanAccount"]);             // xóa nhóm
+        });
+    });
+
     Route::post('/search-nav', [SearchController::class, 'searchNav']);
     Route::post('/search', [SearchController::class, 'search']);
-
     Route::get('/sign-out', [ClientController::class, 'signOut']);
 
     Route::group(['prefix' => '/story'], function () {
@@ -42,6 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', [StoriesController::class, 'detailStory']);
         Route::post('/create', [StoriesController::class, 'store']);
     });
+
     Route::group(['prefix' => '/follower'], function () {
         Route::post('/add-friend', [FollowerController::class, "addFriend"]);
         Route::post('/cancel-friend', [FollowerController::class, "cancelFriend"]);
@@ -60,12 +76,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/data-link-address', [ProfileController::class, "dataLinkAddress"]);                // tất cả thông tin profile
         Route::get('/data-photos', [ProfileController::class, "dataPhotos"]);                // tất cả thông tin profile
     });
+
     Route::group(['prefix' => '/profile'], function () {
         Route::get('/data', [ClientController::class, "getProfile"]);                                   // thông tin tổng quát của profile
         Route::get('/accounts-edit', [ProfileController::class, "dataAccount"]);                        // trang cá nhân của người đang đăng nhập
         Route::post('/update-profile', [ProfileController::class, "updateProfile"]);                    // trang cá nhân của người đang đăng nhập
         Route::post('/update-link-address', [ProfileController::class, "updateLink"]);                  // trang cá nhân của người đang đăng nhập
         Route::get('/data-address-link', [ProfileController::class, "dataLinkAddressProfile"]);         // tất cả thông tin profile
+        Route::post('/change-password', [ProfileController::class, "changePassword"]);                 // đổi mật khẩu
     });
 
     Route::get('/dataFull', [ClientController::class, "getAllData"]);                                   // những người bạn có thể biết
@@ -161,6 +179,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/un-like', [CommentGroupController::class, 'unLike']);
         });
     });
+
     Route::group(['prefix' => '/notification'], function () {
         Route::get('/data', [NotificationController::class, 'getData']);
         Route::post('/update-status', [NotificationController::class, 'updateStatus']);                // Cập nhật thông báo khi người đó đã đọc
@@ -169,19 +188,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/remove-invite', [NotificationController::class, 'removeInvite']);                // Xoá lời mời vào group
 
     });
-    Route::group(['prefix' => '/admin'], function () {
-        Route::group(['prefix' => '/post'], function () {
-            Route::get('/getAllPosts', [AdminController::class, "getAllPosts"]);            // tất cả bài đăng
-            Route::post('/deletePost', [AdminController::class, "deletePost"]);             // xóa bài đăng
-
-        });
-        Route::group(['prefix' => '/account'], function () {
-            Route::get('/getAllAccounts', [AdminController::class, "getAllAccounts"]);            // tất cả nhóm
-            Route::post('/banAccount', [AdminController::class, "banAccount"]);             // xóa nhóm
-            Route::post('/unbanAccount', [AdminController::class, "unbanAccount"]);             // xóa nhóm
-        });
-    });
-
 
     Route::post('/upload-file', [ImageController::class, 'upload']);
     Route::post('/upload-image', [ImageController::class, 'uploadImage']);

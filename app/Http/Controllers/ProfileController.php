@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePassRequest;
 use App\Models\Client;
 use App\Models\Follower;
 use App\Models\Friend;
@@ -10,6 +11,8 @@ use App\Models\Post;
 use App\Models\PostLike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 
 class ProfileController extends Controller
 {
@@ -242,6 +245,24 @@ class ProfileController extends Controller
         }
         return response()->json([
             'dataPhotos'    => $dataPhotos,
+        ]);
+    }
+    public function changePassword(Request $request)
+    {
+        $client = $request->user();
+        if ($client && Hash::check($request->old, $client->password)) {
+            $client->update([
+                'password' => bcrypt($request->new)
+            ]);
+        } else {
+            return response()->json([
+                'status'    => 0,
+                'message'   => 'The password you entered is incorrect',
+            ]);
+        }
+        return response()->json([
+            'status'    => 1,
+            'message'   => 'Changed pass successfully !',
         ]);
     }
 }

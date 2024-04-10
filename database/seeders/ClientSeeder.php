@@ -508,9 +508,9 @@ class ClientSeeder extends Seeder
                 'is_active'         =>  1,
             ],
             [
-                'username'       => 'thanhtruong',
+                'username'       => 'fullstackdev',
                 'password'       => bcrypt(123123),
-                'email'          => 'thanhtruong@gmail.com',
+                'email'          => 'devtest@gmail.com',
                 'phone_number'   => '0321321321',
                 'fullname'       => 'Phạm Thanh Trường',
                 'avatar'         => 'avatar/659ce82c1deaa.jpg',
