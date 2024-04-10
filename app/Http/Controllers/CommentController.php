@@ -92,6 +92,7 @@ class CommentController extends Controller
             'id_client' => $request->user()->id,
             'id_comment' => $request->id
         ]);
+        Comment::find($check->id_comment)->increment('likes');
         if (!$check) {
             return response()->json([
                 'status'    => 0,
@@ -108,6 +109,8 @@ class CommentController extends Controller
         $check = CommentLike::where('id_comment', $request->id)->where('id_client', $request->user()->id)->first();
         if ($check) {
             $check->delete();
+            Comment::find($check->id_comment)->decrement('likes');
+
             return response()->json([
                 'status'    => 1,
                 'message'   => 'Unliked!',
