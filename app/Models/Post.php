@@ -19,6 +19,10 @@ class Post extends Model
         'id_tag',
         'privacy'
     ];
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'id_post');
+    }
     const deleted = 0;
     const public = 1;
     const friend = 2;

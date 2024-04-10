@@ -17,4 +17,8 @@ class Comment extends Model
         'id_replier',
         'id_post',
     ];
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'id_client');
+    }
 }

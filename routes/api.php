@@ -79,6 +79,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/update', [PostController::class, 'update']);
         Route::post('/update-privacy', [PostController::class, 'updatePrivacy']);
         Route::get('/data', [PostController::class, "dataPost"]);
+        Route::get('/{id_post}', [PostController::class, "dataDetailPost"]);                            // 1 dữ liệu chi tiết bài băng dựa vào id post
+
         Route::post('/data-profile', [PostController::class, "dataProfile"]);
 
         Route::post('/like', [PostLikeController::class, "like"]);                                      // tim bài đăng
@@ -180,8 +182,8 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 
-    Route::get('/test', [TestController::class, 'test']);
 
     Route::post('/upload-file', [ImageController::class, 'upload']);
     Route::post('/upload-image', [ImageController::class, 'uploadImage']);
 });
+Route::get('/test', [TestController::class, 'test']);

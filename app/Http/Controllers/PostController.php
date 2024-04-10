@@ -237,4 +237,39 @@ class PostController extends Controller
             ]);
         }
     }
+    public function dataDetailPost($id_post, Request $request)
+    {
+        $likes = PostLike::where('id_post', $id_post)->get();
+        $post = Post::where('posts.id', $id_post)
+            ->join('clients', 'posts.id_client', 'clients.id')
+            ->select('posts.*', 'clients.username', 'clients.fullname', 'clients.avatar')->first();
+        $comments = Comment::where('id_post', $id_post)
+            ->join('clients', 'comments.id_client', 'clients.id')
+            ->select('comments.*', 'clients.username', 'clients.fullname', 'clients.avatar')->get();
+        foreach ($comments as $key => $value) {
+            $replies = Comment::where('id_replier', $value->id)
+                ->join('clients', 'comments.id_client', 'clients.id')
+                ->select('comments.*', 'clients.username', 'clients.fullname', 'clients.avatar')
+                ->get()
+                ->toArray();
+            foreach ($replies as &$reply) {
+                $liked = CommentLike::where('id_comment', $reply['id'])
+                    ->where('id_client', $request->user()->id)
+                    ->exists();
+                $reply['liked'] = $liked;
+            }
+
+            $comments[$key]['replies'] = $replies;
+            $comments[$key]->liked = CommentLike::where('id_comment', $value->id)
+                ->where('id_client', $request->user()->id)
+                ->exists();
+        }
+        $post['comments'] = $comments;
+        $hasliked = $likes->contains('id_client', $request->user()->id);
+        $post['likes'] = $likes;
+        $post['hasLiked'] = $hasliked;
+        return response()->json([
+            'detailPost'   => $post,
+        ]);
+    }
 }
